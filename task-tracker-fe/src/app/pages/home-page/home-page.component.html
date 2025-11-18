@@ -1,0 +1,53 @@
+<form>
+    <div class="mb-3 row">
+        <label
+            for="table-filtering-search"
+            class="col-xs-3 col-sm-auto col-form-label"
+            >Full text search:</label
+        >
+        <div class="col-xs-3 col-sm-auto">
+            <input
+                id="table-filtering-search"
+                class="form-control"
+                type="text"
+                [formControl]="filter"
+            />
+        </div>
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (task of tasks$ | async; track task.id; let i = $index) {
+        <tr>
+            <th scope="row">{{ task.id }}</th>
+            <td>
+                <ngb-highlight [result]="task.title" [term]="filter.value" />
+            </td>
+            <td>
+                <ngb-highlight
+                    [result]="task.description"
+                    [term]="filter.value"
+                />
+            </td>
+            <td>
+                <button (click)="view(task.id)" class="btn btn-primary">
+                    Edit
+                </button>
+            </td>
+        </tr>
+        } @empty {
+        <tr>
+            <td colspan="4" style="text-align: center">No tasks found</td>
+        </tr>
+        }
+    </tbody>
+</table>
