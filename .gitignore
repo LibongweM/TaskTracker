@@ -1,0 +1,43 @@
+.idea
+.DS_Store
+# Ignore Visual Studio files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignore build outputs
+TaskTracker/bin/
+TaskTracker/obj/
+TaskTracker/.idea/*
+
+# Ignore NuGet packages
+*.nupkg
+*.snupkg
+project.lock.json
+TaskTracker/project.lock.json
+TaskTracker/project.fragment.lock.json
+TaskTracker/artifacts/
+
+# Ignore Rider/JetBrains files
+.idea/
+*.sln.iml
+
+# Ignore logs and temporary files
+*.log
+TaskTracker/*.log
+TaskTracker/.vs/
+TaskTracker/.vscode/
+TaskTracker/.idea/
+TaskTracker/.DS_Store
+
+# Ignore generated files
+TaskTracker/wwwroot/
+TaskTracker/GeneratedMSBuildEditorConfig.editorconfig
+TaskTracker/TaskTracker.GeneratedMSBuildEditorConfig.editorconfig
+
+# Ignore appsettings with sensitive data
+TaskTracker/appsettings.Development.json
+TaskTracker/appsettings.Local.json
+TaskTracker/appsettings.*.json
