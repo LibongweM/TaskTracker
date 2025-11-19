@@ -8,6 +8,7 @@ import { AsyncPipe } from "@angular/common";
 import { NgbHighlight } from "@ng-bootstrap/ng-bootstrap";
 import { Observable } from "rxjs";
 import { Task } from "../../interfaces/task";
+import { TaskTrackerService } from "../../services/task-tracker.service";
 
 function search(text: string): TaskDummy[] {
     return TASKS_DUMMY.filter((task) => {
@@ -29,12 +30,15 @@ export class HomePageComponent {
     tasks$: Observable<TaskDummy[]>;
     filter = new FormControl("", { nonNullable: true });
     private router = inject(Router);
+    private taskService = inject(TaskTrackerService);
 
     constructor() {
-        this.tasks$ = this.filter.valueChanges.pipe(
-            startWith(""),
-            map((text) => search(text))
-        );
+        // this.tasks$ = this.filter.valueChanges.pipe(
+        //     startWith(""),
+        //     map((text) => search(text))
+        // );
+
+        this.tasks$ = this.taskService.getAllTasks({});
     }
 
     view(id: number) {

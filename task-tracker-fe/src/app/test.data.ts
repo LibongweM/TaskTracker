@@ -1,6 +1,6 @@
 import { Task } from "./interfaces/task";
 
-export const TasksData = [
+export const TasksData: Task[] = [
     {
         id: 3,
         title: "Create Frontend",

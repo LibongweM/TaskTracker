@@ -1,4 +1,11 @@
-<div>
-    <h2>Create New Task</h2>
-    <app-task-form></app-task-form>
+<div class="container px-5 mx-auto mt-10">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fs-2 fw-bolder">Create New Task</h2>
+    </div>
+
+    <app-task-form
+        [task]="null"
+        (submit)="onSubmitCreateForm($event)"
+        buttonText="Create Task"
+    ></app-task-form>
 </div>
