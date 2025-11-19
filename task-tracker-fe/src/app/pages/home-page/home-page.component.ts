@@ -1,12 +1,12 @@
 import { Component, PipeTransform, inject } from "@angular/core";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { Router, RouterLink } from "@angular/router";
 import { TASKS_DUMMY, TaskDummy } from "../../test.data";
 import { map, startWith } from "rxjs/operators";
 
 import { AsyncPipe } from "@angular/common";
 import { NgbHighlight } from "@ng-bootstrap/ng-bootstrap";
 import { Observable } from "rxjs";
-import { Router } from "@angular/router";
 import { Task } from "../../interfaces/task";
 
 function search(text: string): TaskDummy[] {
@@ -21,7 +21,7 @@ function search(text: string): TaskDummy[] {
 
 @Component({
     selector: "app-home-page",
-    imports: [AsyncPipe, ReactiveFormsModule, NgbHighlight],
+    imports: [AsyncPipe, ReactiveFormsModule, NgbHighlight, RouterLink],
     templateUrl: "./home-page.component.html",
     styleUrl: "./home-page.component.css",
 })

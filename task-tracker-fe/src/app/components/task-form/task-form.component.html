@@ -1,0 +1,65 @@
+<form class="p-5" [formGroup]="taskForm" (ngSubmit)="onSubmitForm()">
+    <div class="mb-3">
+        <label class="form-label">
+            <span>Task Title</span>
+        </label>
+        <input
+            type="text"
+            placeholder="Title..."
+            formControlName="title"
+            class="form-control"
+            required
+        />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            <span>Task Description</span>
+        </label>
+        <textarea
+            class="form-control"
+            placeholder="Describe the task..."
+            formControlName="description"
+        ></textarea>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Priority</label>
+        <select
+            id="status"
+            formControlName="priority"
+            class="form-control form-select"
+        >
+            <option value="" disabled>-- Select an option --</option>
+            @for (option of priorityOptions; track $index) {
+            <option [value]="option.value">
+                {{ option.label }}
+            </option>
+            }
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Status</label>
+        <select
+            id="status"
+            formControlName="status"
+            class="form-control form-select"
+        >
+            <option value="" disabled>-- Select an option --</option>
+            @for (option of statusOptions; track $index) {
+            <option [value]="option.value">
+                {{ option.label }}
+            </option>
+            }
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            <span>Due date</span>
+        </label>
+        <input
+            class="form-control"
+            type="datetime-local"
+            formControlName="dueDate"
+        />
+    </div>
+    <button type="submit" class="btn btn-primary mt-4">Create Task</button>
+</form>
