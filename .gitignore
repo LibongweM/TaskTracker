@@ -8,17 +8,20 @@
 *.sln.docstates
 
 # Ignore build outputs
-TaskTracker/bin/
-TaskTracker/obj/
-TaskTracker/.idea/*
+Backend/TaskTracker/bin/
+Backend/TaskTracker/obj/
+Backend/TaskTracker/.idea/*
 
 # Ignore NuGet packages
-*.nupkg
-*.snupkg
-project.lock.json
-TaskTracker/project.lock.json
-TaskTracker/project.fragment.lock.json
-TaskTracker/artifacts/
+Backend/*.nupkg
+Backend/*.snupkg
+Backend/project.lock.json
+Backend/TaskTracker/project.lock.json
+Backend/TaskTracker/project.fragment.lock.json
+Backend/TaskTracker/artifacts/
+
+Backend/TaskTracker.Test/bin/
+Backend/TaskTracker.Test/obj/
 
 # Ignore Rider/JetBrains files
 .idea/
@@ -26,18 +29,13 @@ TaskTracker/artifacts/
 
 # Ignore logs and temporary files
 *.log
-TaskTracker/*.log
-TaskTracker/.vs/
-TaskTracker/.vscode/
-TaskTracker/.idea/
-TaskTracker/.DS_Store
+Backend/TaskTracker/*.log
+Backend/TaskTracker/.vs/
+Backend/TaskTracker/.vscode/
+Backend/TaskTracker/.idea/
+Backend/TaskTracker/.DS_Store
 
 # Ignore generated files
-TaskTracker/wwwroot/
-TaskTracker/GeneratedMSBuildEditorConfig.editorconfig
-TaskTracker/TaskTracker.GeneratedMSBuildEditorConfig.editorconfig
-
-# Ignore appsettings with sensitive data
-TaskTracker/appsettings.Development.json
-TaskTracker/appsettings.Local.json
-TaskTracker/appsettings.*.json
+Backend/TaskTracker/wwwroot/
+Backend/TaskTracker/GeneratedMSBuildEditorConfig.editorconfig
+Backend/TaskTracker/TaskTracker.GeneratedMSBuildEditorConfig.editorconfig
