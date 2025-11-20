@@ -3,12 +3,12 @@
         <h2 class="fs-2 fw-bolder">
             {{ task()?.title }}
         </h2>
-        <button class="btn btn-ghost">Delete</button>
+        <button (click)="deleteTask()" class="btn btn-ghost">Delete</button>
     </div>
 
     <app-task-form
         [task]="task()"
-        (submit)="onSubmitForm($event)"
+        (formHandler)="onSubmitForm($event)"
         buttonText="Update Task"
     ></app-task-form>
 </div>

@@ -5,6 +5,8 @@ import {
     Output,
     effect,
     inject,
+    input,
+    signal,
 } from "@angular/core";
 import {
     FormBuilder,
@@ -28,24 +30,31 @@ import { TaskFormInterface } from "../../interfaces/task-form.interface";
     providers: [DatePipe],
 })
 export class TaskFormComponent {
-    @Input() task: Task | null = null;
+    task = input<Task | null>(null);
     @Input() buttonText: string = "Create Task";
-    @Output() submit = new EventEmitter<TaskFormInterface>();
+    @Output() formHandler = new EventEmitter<{
+        task: TaskFormInterface;
+        id: number | null;
+    }>();
+    taskId = signal<number | null>(null);
 
     constructor(private datePipe: DatePipe) {
         effect(() => {
-            if (this.task !== null) {
+            const _task = this.task();
+
+            if (_task !== null) {
                 const formattedDate = this.datePipe.transform(
-                    this.task.dueDate,
+                    _task.dueDate,
                     "yyyy-MM-ddTHH:mm:ss"
                 );
                 this.taskForm.patchValue({
-                    title: this.task.title,
-                    description: this.task.description,
+                    title: _task.title,
+                    description: _task.description,
                     dueDate: formattedDate,
-                    status: this.task.status,
-                    priority: this.task.priority,
+                    status: _task.status,
+                    priority: _task.priority,
                 });
+                this.taskId.set(_task.id);
             }
         });
     }
@@ -78,7 +87,6 @@ export class TaskFormComponent {
 
     onSubmitForm() {
         const rawForm = this.taskForm.getRawValue();
-
-        this.submit.emit(rawForm);
+        this.formHandler.emit({ task: rawForm, id: this.taskId() });
     }
 }

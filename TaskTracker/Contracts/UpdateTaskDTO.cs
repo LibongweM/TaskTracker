@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+using TaskTracker.Converters;
 using TaskTracker.Entities;
 
 public class UpdateTaskDTO
@@ -6,13 +8,15 @@ public class UpdateTaskDTO
     public int Id { get; set; }
 
     [Required(ErrorMessage = "The title of the task is required")]
-    public required string Title { get; set; }
+    public string Title { get; set; }
 
     [Required(ErrorMessage = "The description of the task is required")]
-    public required string Description { get; set; }
+    public string Description { get; set; }
 
+    [JsonConverter(typeof(IntAsStringEnumConverter<StatusForTask>))]
     public StatusForTask Status { get; set; } = StatusForTask.New;
 
+    [JsonConverter(typeof(IntAsStringEnumConverter<TaskPriority>))]
     public TaskPriority Priority { get; set; } = TaskPriority.Medium;
 
     public DateTime? DueDate { get; set; }

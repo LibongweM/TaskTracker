@@ -50,11 +50,6 @@ public class TasksController : ControllerBase
         [FromBody] CreateTaskDTO task,
         CancellationToken cancellationToken)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
         var response = await _taskRepository.AddTask(task.MapToDomain());
 
         return CreatedAtAction(nameof(GetTaskById), new { id = response.Id }, response);
@@ -70,11 +65,6 @@ public class TasksController : ControllerBase
         [FromBody] UpdateTaskDTO task,
         CancellationToken cancellationToken)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
         if (id != task.Id)
         {
             return BadRequest($"ID Mismatch");

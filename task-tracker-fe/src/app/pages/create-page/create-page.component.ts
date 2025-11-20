@@ -13,8 +13,13 @@ import { TaskTrackerService } from "../../services/task-tracker.service";
 export class CreatePageComponent {
     private taskService = inject(TaskTrackerService);
 
-    onSubmitCreateForm(formData: TaskFormInterface) {
-        this.taskService.createTask(formData).subscribe((response) => {
+    onSubmitCreateForm({
+        task,
+    }: {
+        task: TaskFormInterface;
+        id: number | null;
+    }) {
+        this.taskService.createTask(task).subscribe((response) => {
             console.log(response);
         });
     }

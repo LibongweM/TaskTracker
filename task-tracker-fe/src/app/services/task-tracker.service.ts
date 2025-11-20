@@ -41,7 +41,7 @@ export class TaskTrackerService {
         id: number;
         task: TaskFormInterface;
     }): Observable<Task> {
-        return this.http.put<Task>(`${this.apiUrl}/${id}`, task);
+        return this.http.put<Task>(`${this.apiUrl}/${id}`, { ...task, id });
     }
 
     deleteTask(id: number): Observable<void> {
