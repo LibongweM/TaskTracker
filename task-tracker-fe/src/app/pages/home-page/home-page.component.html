@@ -2,18 +2,26 @@
     <div class="d-flex justify-content-between pb-1">
         <form>
             <div class="mb-3 row">
-                <label
-                    for="table-filtering-search"
-                    class="col-xs-3 col-sm-auto col-form-label"
-                    >Full text search:</label
-                >
                 <div class="col-xs-3 col-sm-auto">
                     <input
                         id="table-filtering-search"
                         class="form-control"
                         type="text"
+                        placeholder="Search tasks..."
                         [formControl]="filter"
                     />
+                </div>
+                <div class="col-xs-3 col-sm-auto">
+                    <select
+                        [formControl]="sort"
+                        class="form-control form-select"
+                    >
+                        @for (option of sortOptions; track $index) {
+                        <option [value]="option.value">
+                            {{ option.label }}
+                        </option>
+                        }
+                    </select>
                 </div>
             </div>
         </form>
