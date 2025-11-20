@@ -2,7 +2,6 @@ import { Component, PipeTransform, inject } from "@angular/core";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { Observable, combineLatest } from "rxjs";
 import { Router, RouterLink } from "@angular/router";
-import { TASKS_DUMMY, TaskDummy } from "../../test.data";
 import { map, startWith, switchMap } from "rxjs/operators";
 
 import { AsyncPipe } from "@angular/common";
