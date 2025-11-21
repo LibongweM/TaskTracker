@@ -6,6 +6,12 @@
         <button (click)="deleteTask()" class="btn btn-ghost">Delete</button>
     </div>
 
+    @if(error()){
+    <ngb-alert type="danger" [dismissible]="true" (closed)="error.set(null)">{{
+        error()
+    }}</ngb-alert>
+    }
+
     <app-task-form
         [task]="task()"
         (formHandler)="onSubmitForm($event)"

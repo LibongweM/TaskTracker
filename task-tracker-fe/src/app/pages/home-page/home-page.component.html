@@ -1,4 +1,9 @@
 <section>
+    @if(error()){
+    <ngb-alert type="danger" [dismissible]="true" (closed)="error.set(null)">{{
+        error()
+    }}</ngb-alert>
+    }
     <div class="d-flex justify-content-between pb-1">
         <form>
             <div class="mb-3 row">

@@ -2,6 +2,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Component, inject, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 
+import { NgbAlertModule } from "@ng-bootstrap/ng-bootstrap";
 import { Priority } from "../../enums/priority";
 import { Status } from "../../enums/status";
 import { Task } from "../../interfaces/task";
@@ -12,13 +13,14 @@ import { TasksData } from "../../test.data";
 
 @Component({
     selector: "app-edit-page",
-    imports: [ReactiveFormsModule, TaskFormComponent],
+    imports: [ReactiveFormsModule, TaskFormComponent, NgbAlertModule],
     templateUrl: "./edit-page.component.html",
     styleUrl: "./edit-page.component.css",
 })
 export class EditPageComponent {
     private activatedRoute = inject(ActivatedRoute);
     task = signal<Task | null>(null);
+    error = signal<string | null>(null);
     private router = inject(Router);
     private taskService = inject(TaskTrackerService);
 
@@ -26,8 +28,14 @@ export class EditPageComponent {
         this.activatedRoute.params.subscribe((params) => {
             const id = +params["id"];
 
-            this.taskService.getTaskById(id).subscribe((t) => {
-                this.task.set(t);
+            this.taskService.getTaskById(id).subscribe((result) => {
+                if (!result.isSuccess) {
+                    this.error.set(result.errorMessage);
+                    setTimeout(() => this.router.navigate([""]), 300);
+                    return;
+                }
+
+                this.router.navigate([""]);
             });
         });
     }

@@ -1,8 +1,11 @@
 import { Injectable, inject } from "@angular/core";
+import { Observable, catchError, map, of } from "rxjs";
 
+import { ErrorResponse } from "../types/error-response";
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Result } from "../types/result";
 import { Sort } from "../enums/sort";
+import { SuccessResponse } from "../interfaces/success-response.interface";
 import { Task } from "../interfaces/task";
 import { TaskFormInterface } from "../interfaces/task-form.interface";
 
@@ -20,18 +23,41 @@ export class TaskTrackerService {
     }: {
         searchTerm?: string;
         sort?: Sort;
-    }): Observable<Task[]> {
-        return this.http.get<Task[]>(
-            `${this.apiUrl}?term=${searchTerm}&sort=${sort}`
+    }): Observable<Result<Task[]>> {
+        return this.http
+            .get<Result<Task[]>>(
+                `${this.apiUrl}?term=${searchTerm}&sort=${sort}`
+            )
+            .pipe(
+                catchError((err) =>
+                    of({
+                        isSuccess: false,
+                        errorMessage: "Failed to load tasks",
+                    } as ErrorResponse)
+                )
+            );
+    }
+
+    getTaskById(id: number): Observable<Result<Task>> {
+        return this.http.get<Result<Task>>(`${this.apiUrl}/${id}`).pipe(
+            catchError((err) =>
+                of({
+                    isSuccess: false,
+                    errorMessage: "Server error while fetching task",
+                } as ErrorResponse)
+            )
         );
     }
 
-    getTaskById(id: number): Observable<Task> {
-        return this.http.get<Task>(`${this.apiUrl}/${id}`);
-    }
-
-    createTask(task: TaskFormInterface): Observable<Task> {
-        return this.http.post<Task>(this.apiUrl, task);
+    createTask(task: TaskFormInterface): Observable<Result<Task>> {
+        return this.http.post<Result<Task>>(this.apiUrl, task).pipe(
+            catchError((err) =>
+                of({
+                    isSuccess: false,
+                    errorMessage: "Failed to create task",
+                })
+            )
+        );
     }
 
     updateTask({
@@ -40,11 +66,27 @@ export class TaskTrackerService {
     }: {
         id: number;
         task: TaskFormInterface;
-    }): Observable<Task> {
-        return this.http.put<Task>(`${this.apiUrl}/${id}`, { ...task, id });
+    }): Observable<Result<Task>> {
+        return this.http
+            .put<Result<Task>>(`${this.apiUrl}/${id}`, { ...task, id })
+            .pipe(
+                catchError((err) =>
+                    of({
+                        isSuccess: false,
+                        errorMessage: "Failed to update task",
+                    } as ErrorResponse)
+                )
+            );
     }
 
-    deleteTask(id: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    deleteTask(id: number): Observable<Result<void>> {
+        return this.http.delete<Result<void>>(`${this.apiUrl}/${id}`).pipe(
+            catchError((err) =>
+                of({
+                    isSuccess: false,
+                    errorMessage: "Failed to delete task",
+                } as ErrorResponse)
+            )
+        );
     }
 }

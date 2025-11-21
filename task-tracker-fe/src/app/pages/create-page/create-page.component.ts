@@ -1,17 +1,24 @@
-import { Component, inject } from "@angular/core";
+import { Component, ViewChild, inject, signal } from "@angular/core";
+import { NgbAlert, NgbAlertModule } from "@ng-bootstrap/ng-bootstrap";
+import { Subject, debounceTime, tap } from "rxjs";
 
+import { ErrorResponse } from "../../types/error-response";
+import { Router } from "@angular/router";
 import { TaskFormComponent } from "../../components/task-form/task-form.component";
 import { TaskFormInterface } from "../../interfaces/task-form.interface";
 import { TaskTrackerService } from "../../services/task-tracker.service";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-create-page",
-    imports: [TaskFormComponent],
+    imports: [TaskFormComponent, NgbAlertModule],
     templateUrl: "./create-page.component.html",
     styleUrl: "./create-page.component.css",
 })
 export class CreatePageComponent {
     private taskService = inject(TaskTrackerService);
+    error = signal<string | null>(null);
+    private router = inject(Router);
 
     onSubmitCreateForm({
         task,
@@ -20,7 +27,12 @@ export class CreatePageComponent {
         id: number | null;
     }) {
         this.taskService.createTask(task).subscribe((response) => {
-            console.log(response);
+            if (!response.isSuccess) {
+                this.error.set(response.errorMessage);
+                return;
+            }
+
+            this.router.navigate([""]);
         });
     }
 }
