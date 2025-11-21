@@ -14,7 +14,8 @@ import { TaskFormInterface } from "../interfaces/task-form.interface";
 })
 export class TaskTrackerService {
     private http = inject(HttpClient);
-    private apiUrl = "http://localhost:5000/api/tasks";
+    // private apiUrl = "http://localhost:5000/api/tasks";
+    private apiUrl = process.env["API_BASE_URL"] as string;
     constructor() {}
 
     getAllTasks({
