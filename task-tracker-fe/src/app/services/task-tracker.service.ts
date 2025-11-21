@@ -79,8 +79,8 @@ export class TaskTrackerService {
             );
     }
 
-    deleteTask(id: number): Observable<Result<void>> {
-        return this.http.delete<Result<void>>(`${this.apiUrl}/${id}`).pipe(
+    deleteTask(id: number): Observable<Result<boolean>> {
+        return this.http.delete<Result<boolean>>(`${this.apiUrl}/${id}`).pipe(
             catchError((err) =>
                 of({
                     isSuccess: false,

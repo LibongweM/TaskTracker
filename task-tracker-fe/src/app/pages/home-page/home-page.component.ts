@@ -11,6 +11,7 @@ import { Observable, combineLatest, of } from "rxjs";
 import { Router, RouterLink } from "@angular/router";
 import {
     catchError,
+    debounceTime,
     finalize,
     map,
     startWith,
@@ -47,7 +48,10 @@ export class HomePageComponent {
     private router = inject(Router);
     private taskService = inject(TaskTrackerService);
 
-    filterTerm$ = this.filter.valueChanges.pipe(startWith(""));
+    filterTerm$ = this.filter.valueChanges.pipe(
+        startWith(""),
+        debounceTime(300)
+    );
     sortOption$ = this.sort.valueChanges.pipe(startWith(Sort.Asc));
 
     sortOptions: { label: string; value: Sort }[] = Object.keys(Sort)
@@ -75,25 +79,25 @@ export class HomePageComponent {
         })
     );
 
-    tasks$: Observable<Task[]> = this.rawResult$.pipe(
-        map((res) =>
-            res.isSuccess ? (res as SuccessResponse<Task[]>).data : []
-        )
-    );
+    tasks$: Observable<Task[]>;
 
     constructor() {
-        // Set loading=true whenever a new search starts
-        combineLatest([this.filterTerm$, this.sortOption$]).subscribe(() => {
-            this.loading.set(true);
-            this.error.set(null);
-        });
+        this.tasks$ = combineLatest([this.filterTerm$, this.sortOption$]).pipe(
+            // Use switchMap only when the search term changes (API call)
+            switchMap(([searchTerm, sortOption]) =>
+                this.search(searchTerm, sortOption)
+            )
+        );
+    }
 
-        effect(() => {
-            this.rawResult$.subscribe((res) => {
-                this.loading.set(false);
-                this.error.set(res.isSuccess ? null : res.errorMessage);
-            });
-        });
+    search(text: string, sort: Sort): Observable<Task[]> {
+        return this.taskService
+            .getAllTasks({ searchTerm: text, sort })
+            .pipe(
+                map((res) =>
+                    res.isSuccess ? (res as SuccessResponse<Task[]>).data : []
+                )
+            );
     }
 
     view(id: number) {

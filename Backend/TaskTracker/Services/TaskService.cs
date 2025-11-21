@@ -59,16 +59,16 @@ public class TaskService : ITaskService
         }
     }
 
-    public async Task<Result> DeleteTask(int id)
+    public async Task<Result<bool>> DeleteTask(int id)
     {
         try
         {
             await _repo.DeleteTask(id);
-            return Result.Success();
+            return Result<bool>.Success(true);
         }
         catch (Exception e)
         {
-            return Result.Failure(e.Message);
+            return Result<bool>.Failure(e.Message);
         }
     }
 }

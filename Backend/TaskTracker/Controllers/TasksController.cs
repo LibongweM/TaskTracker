@@ -90,6 +90,6 @@ public class TasksController : ControllerBase
         CancellationToken cancellationToken)
     {
         var response = await _taskService.DeleteTask(id);
-        return Ok(Response);
+        return Ok(response);
     }
 }
