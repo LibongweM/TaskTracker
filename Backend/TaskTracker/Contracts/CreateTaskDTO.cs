@@ -3,6 +3,8 @@ using System.Text.Json.Serialization;
 using TaskTracker.Converters;
 using TaskTracker.Entities;
 
+namespace TaskTracker.Contracts;
+
 public class CreateTaskDTO
 {
     [Required(ErrorMessage = "The title of the task is required")]

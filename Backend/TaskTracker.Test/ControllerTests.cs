@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
+using TaskTracker.Contracts;
+using TaskTracker.Controllers;
 using TaskTracker.Data;
 using TaskTracker.Entities;
-using TaskTracker.Repository;
+using TaskTracker.Interfaces;
 
 namespace TaskTracker.Test;
 
@@ -22,11 +24,11 @@ public class ControllerTests
         // Seed using your real initializer
         SeedData.Initialize(db);
         
-        var repo = scope.ServiceProvider.GetRequiredService<ITaskRepository>();
-        var controller = new TasksController(repo);
+        var service = scope.ServiceProvider.GetRequiredService<ITaskService>();
+        var controller = new TasksController(service);
 
         var result = await controller.GetAllTasks(null, SortDescriptor.Asc, CancellationToken.None);
-        var okResult = result.Result as OkObjectResult;
+        var okResult = result as OkObjectResult;
         
         Assert.NotNull(okResult);
         Assert.Equal(200, okResult.StatusCode);
@@ -44,14 +46,14 @@ public class ControllerTests
         var provider = TestFactory.BuildServiceProvider();
         using var scope = provider.CreateScope();
         
-        var repo = scope.ServiceProvider.GetRequiredService<ITaskRepository>();
+        var repo = scope.ServiceProvider.GetRequiredService<ITaskService>();
         var controller = new TasksController(repo);
 
         // Act
         var result = await controller.UpdateTask(10, updateDto, CancellationToken.None);
 
         // Assert
-        var badResult = result.Result as BadRequestObjectResult;
+        var badResult = result as BadRequestObjectResult;
         Assert.NotNull(badResult);
         Assert.Equal(400, badResult.StatusCode);
     }

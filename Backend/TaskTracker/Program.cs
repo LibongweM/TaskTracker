@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
-using TaskTracker.Converters;
+using TaskTracker;
 using TaskTracker.Data;
-using TaskTracker.Repository;
-using TaskTracker.Repository.Implementation;
+using TaskTracker.Data.Repositories;
+using TaskTracker.Interfaces;
+using TaskTracker.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,7 @@ builder.Services.AddHttpLogging(options =>
     options.LoggingFields = HttpLoggingFields.RequestBody | HttpLoggingFields.ResponseBody;
 });
 
+builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 
 var app = builder.Build();

@@ -1,30 +1,34 @@
 using Microsoft.AspNetCore.Mvc;
+using TaskTracker.Contracts;
 using TaskTracker.Entities;
-using TaskTracker.Repository;
+using TaskTracker.Extensions;
+using TaskTracker.Interfaces;
+
+namespace TaskTracker.Controllers;
 
 [ApiController]
 [Route("api/tasks")]
 public class TasksController : ControllerBase
 {
-    private readonly ITaskRepository _taskRepository;
+    private readonly ITaskService _taskService;
 
-    public TasksController(ITaskRepository taskRepository)
+    public TasksController(ITaskService taskService)
     {
-        _taskRepository = taskRepository;
+        _taskService = taskService;
     }
 
     [HttpGet]
     [ProducesDefaultResponseType]
     [ProducesResponseType(typeof(List<TaskDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<TaskDTO>>> GetAllTasks(
+    public async Task<IActionResult> GetAllTasks(
         [FromQuery] string? term,
         [FromQuery] SortDescriptor sort,
         CancellationToken cancellationToken)
     {
-        var response = await _taskRepository.GetTasks(term, sort);
+        var response = await _taskService.GetAll(term, sort);
 
-        return Ok(response.MapToDTOList());
+        return response.ToHttpResult();
     }
 
     [HttpGet("{id:int}")]
@@ -32,27 +36,27 @@ public class TasksController : ControllerBase
     [ProducesResponseType(typeof(TaskDTO), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<TaskDTO>> GetTaskById(
+    public async Task<IActionResult> GetTaskById(
         [FromRoute] int id,
         CancellationToken cancellationToken)
     {
-        var response = await _taskRepository.GetTaskById(id);
+        var response = await _taskService.GetById(id);
 
-        return Ok(response.MapToDTO());
+        return response.ToHttpResult();
     }
 
     [HttpPost]
     [ProducesDefaultResponseType]
-    [ProducesResponseType(typeof(TaskDTO), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(TaskDTO), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<TaskDTO>> CreateNewTask(
+    public async Task<IActionResult> CreateNewTask(
         [FromBody] CreateTaskDTO task,
         CancellationToken cancellationToken)
     {
-        var response = await _taskRepository.AddTask(task.MapToDomain());
+        var response = await _taskService.Add(task.MapToDomain());
 
-        return CreatedAtAction(nameof(GetTaskById), new { id = response.Id }, response);
+        return response.ToHttpResult();
     }
 
     [HttpPut("{id:int}")]
@@ -60,7 +64,7 @@ public class TasksController : ControllerBase
     [ProducesResponseType(typeof(TaskDTO), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<TaskDTO>> UpdateTask(
+    public async Task<IActionResult> UpdateTask(
         [FromRoute] int id,
         [FromBody] UpdateTaskDTO task,
         CancellationToken cancellationToken)
@@ -70,21 +74,21 @@ public class TasksController : ControllerBase
             return BadRequest($"ID Mismatch");
         }
 
-        var response = await _taskRepository.UpdateTask(id, task.MapToDomain());
+        var response = await _taskService.Update(id, task.MapToDomain());
 
-        return Ok(response);
+        return response.ToHttpResult();
     }
 
     [HttpDelete("{id:int}")]
     [ProducesDefaultResponseType]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> DeleteTask(
+    public async Task<IActionResult> DeleteTask(
         [FromRoute] int id,
         CancellationToken cancellationToken)
     {
-        await _taskRepository.DeleteTask(id);
-        return NoContent();
+        var response = await _taskService.DeleteTask(id);
+        return response.ToHttpResult();
     }
 }

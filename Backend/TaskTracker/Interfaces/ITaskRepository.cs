@@ -1,6 +1,6 @@
 using TaskTracker.Entities;
 
-namespace TaskTracker.Repository;
+namespace TaskTracker.Interfaces;
 
 public interface ITaskRepository
 {

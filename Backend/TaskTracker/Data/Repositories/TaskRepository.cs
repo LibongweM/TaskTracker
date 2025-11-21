@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using TaskTracker.Data;
 using TaskTracker.Entities;
+using TaskTracker.Interfaces;
 
-namespace TaskTracker.Repository.Implementation;
+namespace TaskTracker.Data.Repositories;
 
 public class TaskRepository(TrackerAppDbContext dbContext) : ITaskRepository
 {

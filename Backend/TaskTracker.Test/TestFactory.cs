@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TaskTracker.Data;
-using TaskTracker.Repository;
-using TaskTracker.Repository.Implementation;
+using TaskTracker.Interfaces;
+using TaskTracker.Services;
 
 namespace TaskTracker.Test;
 
@@ -15,7 +15,7 @@ public static class TestFactory
         services.AddDbContext<TrackerAppDbContext>(options =>
             options.UseInMemoryDatabase("TrackerAppDb"));
 
-        services.AddScoped<ITaskRepository, TaskRepository>();
+        services.AddScoped<ITaskService, TaskService>();
 
         return services.BuildServiceProvider();
     }

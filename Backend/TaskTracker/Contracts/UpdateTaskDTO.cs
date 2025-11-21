@@ -3,6 +3,8 @@ using System.Text.Json.Serialization;
 using TaskTracker.Converters;
 using TaskTracker.Entities;
 
+namespace TaskTracker.Contracts;
+
 public class UpdateTaskDTO
 {
     public int Id { get; set; }

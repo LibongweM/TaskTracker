@@ -1,5 +1,7 @@
 using TaskTracker.Entities;
 
+namespace TaskTracker.Contracts;
+
 public class TaskDTO
 {
     public int Id { get; set; }
