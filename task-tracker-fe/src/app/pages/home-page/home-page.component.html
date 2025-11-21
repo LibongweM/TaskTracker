@@ -37,6 +37,9 @@
         </div>
     </div>
     <div>
+        @if(loading()){
+        <span>Loading tasks...</span>
+        } @if(!loading()){
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -77,5 +80,6 @@
                 }
             </tbody>
         </table>
+        }
     </div>
 </section>

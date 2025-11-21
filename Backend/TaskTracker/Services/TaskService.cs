@@ -33,11 +33,11 @@ public class TaskService : ITaskService
         return Result<List<TaskDTO>>.Success(tasks.MapToDTOList());
     }
 
-    public async Task<Result<TaskDTO>> Add(Tasks task)
+    public async Task<Result<TaskDTO>> Add(CreateTaskDTO dto)
     {
         try
         {
-            var createdTask = await _repo.AddTask(task);
+            var createdTask = await _repo.AddTask(dto.MapToDomain());
             return Result<TaskDTO>.Success(createdTask.MapToDTO());
         }
         catch (Exception e)
@@ -46,11 +46,11 @@ public class TaskService : ITaskService
         }
     }
 
-    public async Task<Result<TaskDTO>> Update(int id, Tasks task)
+    public async Task<Result<TaskDTO>> Update(int id, UpdateTaskDTO dto)
     {
         try
         {
-            var updatedTask = await _repo.AddTask(task);
+            var updatedTask = await _repo.UpdateTask(id, dto.MapToDomain());
             return Result<TaskDTO>.Success(updatedTask.MapToDTO());
         }
         catch (Exception e)

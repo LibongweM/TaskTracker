@@ -5,6 +5,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { NgbAlertModule } from "@ng-bootstrap/ng-bootstrap";
 import { Priority } from "../../enums/priority";
 import { Status } from "../../enums/status";
+import { SuccessResponse } from "../../interfaces/success-response.interface";
 import { Task } from "../../interfaces/task";
 import { TaskFormComponent } from "../../components/task-form/task-form.component";
 import { TaskFormInterface } from "../../interfaces/task-form.interface";
@@ -21,6 +22,8 @@ export class EditPageComponent {
     private activatedRoute = inject(ActivatedRoute);
     task = signal<Task | null>(null);
     error = signal<string | null>(null);
+    success = signal(false);
+
     private router = inject(Router);
     private taskService = inject(TaskTrackerService);
 
@@ -35,7 +38,7 @@ export class EditPageComponent {
                     return;
                 }
 
-                this.router.navigate([""]);
+                this.task.set((result as SuccessResponse<Task>).data);
             });
         });
     }
@@ -45,22 +48,35 @@ export class EditPageComponent {
             alert(`Error editing task. No ID found`);
             return;
         }
-        this.taskService
-            .updateTask({ id, task })
-            .subscribe((r) => console.log(r));
+        this.taskService.updateTask({ id, task }).subscribe((result) => {
+            if (!result.isSuccess) {
+                this.error.set(result.errorMessage);
+                return;
+            }
+
+            this.success.set(true);
+        });
+    }
+
+    navigateHome() {
+        this.router.navigate([""]);
     }
 
     deleteTask() {
         const stored_task = this.task();
 
         if (stored_task === null) {
-            alert("This task cannot be deleted");
+            this.error.set("Task coudl not be deleted.");
             return;
         }
 
-        this.taskService.deleteTask(stored_task.id).subscribe((_) => {
-            alert("The task was deleted");
-            this.router.navigate(["/"]);
+        this.taskService.deleteTask(stored_task.id).subscribe((result) => {
+            if (!result.isSuccess) {
+                this.error.set("Failed to delete the task");
+                return;
+            }
+
+            this.router.navigate([""]);
         });
     }
 }

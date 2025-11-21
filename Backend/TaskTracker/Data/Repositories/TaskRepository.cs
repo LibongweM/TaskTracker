@@ -53,9 +53,11 @@ public class TaskRepository(TrackerAppDbContext dbContext) : ITaskRepository
         existingTask.Priority = task.Priority;
         existingTask.DueDate = task.DueDate;
 
+        var updatedTask = dbContext.Update(existingTask);
+
         await dbContext.SaveChangesAsync();
 
-        return existingTask;
+        return updatedTask.Entity;
     }
 
     public async Task DeleteTask(int id)

@@ -18,6 +18,8 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 export class CreatePageComponent {
     private taskService = inject(TaskTrackerService);
     error = signal<string | null>(null);
+    wasSuccess = signal<boolean>(false);
+
     private router = inject(Router);
 
     onSubmitCreateForm({
@@ -32,7 +34,12 @@ export class CreatePageComponent {
                 return;
             }
 
-            this.router.navigate([""]);
+            this.wasSuccess.set(true);
         });
+    }
+
+    navigateHome() {
+        this.wasSuccess.set(true);
+        this.router.navigate([""]);
     }
 }

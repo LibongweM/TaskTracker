@@ -3,6 +3,7 @@ using TaskTracker.Contracts;
 using TaskTracker.Entities;
 using TaskTracker.Extensions;
 using TaskTracker.Interfaces;
+using TaskTracker.Models;
 
 namespace TaskTracker.Controllers;
 
@@ -28,7 +29,7 @@ public class TasksController : ControllerBase
     {
         var response = await _taskService.GetAll(term, sort);
 
-        return response.ToHttpResult();
+        return Ok(response);
     }
 
     [HttpGet("{id:int}")]
@@ -42,7 +43,7 @@ public class TasksController : ControllerBase
     {
         var response = await _taskService.GetById(id);
 
-        return response.ToHttpResult();
+        return Ok(response);
     }
 
     [HttpPost]
@@ -54,9 +55,9 @@ public class TasksController : ControllerBase
         [FromBody] CreateTaskDTO task,
         CancellationToken cancellationToken)
     {
-        var response = await _taskService.Add(task.MapToDomain());
+        var response = await _taskService.Add(task);
 
-        return response.ToHttpResult();
+        return Ok(response);
     }
 
     [HttpPut("{id:int}")]
@@ -71,12 +72,12 @@ public class TasksController : ControllerBase
     {
         if (id != task.Id)
         {
-            return BadRequest($"ID Mismatch");
+            return Result.Failure("Id does not match").ToHttpResult();
         }
 
-        var response = await _taskService.Update(id, task.MapToDomain());
+        var response = await _taskService.Update(id, task);
 
-        return response.ToHttpResult();
+        return Ok(response);
     }
 
     [HttpDelete("{id:int}")]
@@ -89,6 +90,6 @@ public class TasksController : ControllerBase
         CancellationToken cancellationToken)
     {
         var response = await _taskService.DeleteTask(id);
-        return response.ToHttpResult();
+        return Ok(Response);
     }
 }

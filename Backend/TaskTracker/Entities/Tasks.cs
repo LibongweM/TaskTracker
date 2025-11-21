@@ -7,7 +7,6 @@ namespace TaskTracker.Entities;
 
 public class Tasks
 {
-    [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
